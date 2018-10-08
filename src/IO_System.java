@@ -22,15 +22,13 @@ public class IO_System{
     }
 
     public void readBlock(int i, byte[] p){
-        for (int j = 0; j < B; j++)
-        {
+        for (int j = 0; j < B; j++){
             p[j] = ldisk[i][j];
         }
     }
 
     public void writeBlock(int i, byte[] p){
-        for (int j = 0; j < B; j++)
-        {
+        for (int j = 0; j < B; j++){
             ldisk[i][j] = p[j];
         }
     }
@@ -38,18 +36,17 @@ public class IO_System{
     // save disk to a file
     public void saveFile(String fname) throws IOException{
         FileOutputStream file = new FileOutputStream(fname);
-        for (int i = 0; i < L; i++)
+        for (int i = 0; i < L; i++){
             file.write(ldisk[i]);
+        }
         file.close();
     }
 
     // load disk from a file
     public void loadFile(String fname) throws IOException{
         FileInputStream file = new FileInputStream(fname);
-        for (int i = 0; i < L; i++)
-        {
-            if (file.read(ldisk[i]) != B)
-            {
+        for (int i = 0; i < L; i++){
+            if (file.read(ldisk[i]) != B){
                 file.close();
                 throw new IOException("Error reading");
             }
@@ -63,8 +60,7 @@ public class IO_System{
     // pack int into byte array
     public static void pack(byte[] mem, int val, int loc){
         final int MASK = 0xff;
-        for (int i = 3; i >= 0; i--)
-        {
+        for (int i = 3; i >= 0; i--){
             mem[loc+i] = (byte)(val & MASK);
             val = val >> 8;
         }
@@ -74,15 +70,28 @@ public class IO_System{
     public static int unpack(byte[] mem, int loc){
         final int MASK = 0xff;
         int v = (int)mem[loc] & MASK;
-        for (int i = 1; i < 4; i++)
-        {
+        for (int i = 1; i < 4; i++){
             v = v << 8;
             v = v | ((int)mem[loc+i] & MASK);
         }
         return v;
     }
 
-    
+    // pack int into byte array
+    public static void packArr(byte[] mem, int[] val, int loc){
+        for (int i=0; i < val.length; i++){
+            pack(mem, val[i], loc + i * 4);
+        }
+    }
+
+    // unpack int from array
+    public static int[] unpackArr(byte[] mem, int loc, int size){
+        int[] val = new int[size];
+        for (int i=0; i < size; i++){
+            val[i] = unpack(mem, loc + i * 4);
+        }
+        return val;
+    }
 
 }
 
