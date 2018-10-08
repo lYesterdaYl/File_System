@@ -21,5 +21,20 @@ public class IO_System {
             for (int j = 0; j < B; j++)
                 ldisk[i][j] = 0;
     }
-    
+
+    public void readBlock(int i, byte[] p)
+    {
+        for (int j = 0; j < B; j++)
+        {
+            p[j] = ldisk[i][j];
+        }
+    }
+
+    public void writeBlock(int i, byte[] p)
+    {
+        for (int j = 0; j < B; j++)
+        {
+            ldisk[i][j] = p[j];
+        }
+    }
 }
