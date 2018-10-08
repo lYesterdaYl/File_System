@@ -58,5 +58,31 @@ public class IO_System{
     }
 
 
+    // some utility functions
+
+    // pack int into byte array
+    public static void pack(byte[] mem, int val, int loc){
+        final int MASK = 0xff;
+        for (int i = 3; i >= 0; i--)
+        {
+            mem[loc+i] = (byte)(val & MASK);
+            val = val >> 8;
+        }
+    }
+
+    // unpack int from array
+    public static int unpack(byte[] mem, int loc){
+        final int MASK = 0xff;
+        int v = (int)mem[loc] & MASK;
+        for (int i = 1; i < 4; i++)
+        {
+            v = v << 8;
+            v = v | ((int)mem[loc+i] & MASK);
+        }
+        return v;
+    }
+
+    
+
 }
 
