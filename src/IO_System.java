@@ -93,5 +93,43 @@ public class IO_System{
         return val;
     }
 
+    public static void packStr(byte[] mem, String val, int loc){
+        byte[] d = val.getBytes();
+        for (int i = 0; i < 4; i++){
+            byte c = 0;
+            if (i < d.length)
+                c = d[i];
+            mem[loc+i] = c;
+        }
+    }
+
+    // unpack int from array
+    public static String unpackStr(byte[] mem, int loc){
+        byte[] tmp = new byte[4];
+        for (int i=0; i < 4; i++){
+            tmp[i] = mem[loc+i];
+        }
+        return new String(tmp).trim();
+    }
+
+    // set and get the bit map
+    public static boolean getBit(byte[] data, int idx){
+        int pos = idx / 8;
+        int off = idx % 8;  // 0-7
+
+        byte v = data[pos];
+        return (v & (1<<off)) != 0;
+    }
+
+    public static void setBit(byte[] data, boolean val, int idx){
+        int pos = idx / 8;
+        int off = idx % 8;  // 0-7
+
+        if (val)
+            data[pos] = (byte)(data[pos] | (1<<off) );
+        else
+            data[pos] = (byte)(data[pos] & (~(1<<off)));
+    }
+
 }
 
