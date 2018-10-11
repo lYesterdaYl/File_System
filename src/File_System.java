@@ -56,6 +56,27 @@ public class File_System{
 
     // open the directory
     private void openDir(){
+        if (oft[0] != null){
+            return;
+        }
 
+        // open directory as first file
+        oft[0] = new OFTEntry();
+
+        // read first file
+        int[] desc = readDesc(0);
+        if (desc[0] > 0){
+            io.readBlock(desc[1], oft[0].buffer);
+        }
+    }
+
+    // load file descripty by index
+    public int[] readDesc(int idx){
+        byte[] buf = new byte[IO_System.B];
+        int blk = idx / NUM_DESC_PER_BLK + 1;
+        io.readBlock(blk, buf);
+
+        int off = idx % NUM_DESC_PER_BLK;
+        return IO_System.unpackArr(buf, off*DESC_SIZE, 4);
     }
 }
