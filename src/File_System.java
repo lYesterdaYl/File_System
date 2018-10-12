@@ -110,48 +110,6 @@ public class File_System{
         }
     }
 
-    // save the file
-    public boolean saveDisk(String fname){
-        for (int i = 0; i < oft.length; i++){
-            if (oft[i] != null && !close(i))
-                return false;
-        }
-
-        try{
-            io.saveFile(fname);
-
-            openDir();
-
-            return true;
-        } catch (IOException e){
-            return false;
-        }
-    }
-
-
-
-    // close the file
-    public boolean close(int index){
-        if (index < 0 || index > oft.length){
-            return false;
-        }
-        if (oft[index] == null){
-            return false;
-        }
-
-        // get the file descriptor
-        int[] desc = readDesc(oft[index].index);
-        // desc[0]=filelength, desc[1]=blk0, desc[2]=blk1, desc[3]=blk2
-
-        // write blk data back
-        int blkIdx = oft[index].pos / IOSys.B;
-        if (blkIdx < desc.length-1 && desc[blkIdx+1] > 0){
-            int blk = desc[blkIdx+1]; // -1=unused, 0=freenode, >0=used
-            io.writeBlock(blk, oft[index].buffer);  // write back
-        }
-        return true;
-    }
-
 
 
 }
