@@ -144,7 +144,7 @@ public class File_System{
         // desc[0]=filelength, desc[1]=blk0, desc[2]=blk1, desc[3]=blk2
 
         // write blk data back
-        int blkIdx = oft[index].pos / IOSys.B;
+        int blkIdx = oft[index].pos / IO_System.B;
         if (blkIdx < desc.length-1 && desc[blkIdx+1] > 0){
             int blk = desc[blkIdx+1]; // -1=unused, 0=freenode, >0=used
             io.writeBlock(blk, oft[index].buffer);  // write back
