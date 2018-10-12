@@ -79,4 +79,26 @@ public class File_System{
         int off = idx % NUM_DESC_PER_BLK;
         return IO_System.unpackArr(buf, off*DESC_SIZE, 4);
     }
+
+    // load disk from file, return true if file exists
+    public boolean loadDisk(String fname){
+        try{
+            io.loadFile(fname);
+
+            // clear oft entries
+            for (int i = 0; i < OFT_SIZE; i++){
+                oft[i] = null;
+            }
+
+            openDir();
+
+            return true;
+
+        } catch (Exception e){
+            init();
+            return false;
+        }
+    }
+
 }
+
