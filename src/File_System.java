@@ -149,9 +149,29 @@ public class File_System{
             int blk = desc[blkIdx+1]; // -1=unused, 0=freenode, >0=used
             io.writeBlock(blk, oft[index].buffer);  // write back
         }
+
+        // update file length
+        if (oft[index].pos > desc[0]){
+            desc[0] = oft[index].pos;
+
+            // update descriptor
+            writeDesc(oft[index].index, desc);
+        }
+
+        // Free the OFT entry
+        oft[index] = null;
+
         return true;
     }
 
+    // the shell program
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        PrintStream out = System.out;
+        File_System sys = new File_System();
+
+
+    }
 
 
 }
