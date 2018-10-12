@@ -181,6 +181,20 @@ public class File_System{
         if (pos > desc[0])  // seek pos > file length
             return false;
 
+        if (newblkIdx != oldblkIdx){
+            // write back old data
+            if (oldblkIdx < desc.length-1 && desc[oldblkIdx+1] > 0){
+                int blk = desc[oldblkIdx+1]; // -1=unused, 0=freenode, >0=used
+                io.writeBlock(blk, oft[index].buffer);  // write back
+            }
+
+            // read new data to buffer
+            if (newblkIdx < desc.length-1 && desc[newblkIdx+1] > 0){
+                int blk = desc[newblkIdx+1];
+                io.readBlock(blk, oft[index].buffer);
+            }
+        }
+
         oft[index].pos = pos;
         return true;
     }
