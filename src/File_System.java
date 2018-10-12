@@ -80,6 +80,16 @@ public class File_System{
         return IO_System.unpackArr(buf, off*DESC_SIZE, 4);
     }
 
+    public void writeDesc(int idx, int[] desc){
+        int blk = idx / NUM_DESC_PER_BLK + 1;
+        byte[] buf = new byte[IO_System.B];
+        io.readBlock(blk, buf);
+
+        int off = idx % NUM_DESC_PER_BLK;
+        IO_System.packArr(buf, desc, off*DESC_SIZE);
+        io.writeBlock(blk, buf);
+    }
+
     // load disk from file, return true if file exists
     public boolean loadDisk(String fname){
         try{
@@ -99,6 +109,8 @@ public class File_System{
             return false;
         }
     }
+
+
 
 }
 
