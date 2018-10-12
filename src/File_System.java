@@ -164,6 +164,27 @@ public class File_System{
         return true;
     }
 
+    // seek to position
+    public boolean lseek(int index, int pos){
+        if (index < 0 || index > oft.length){
+            return false;
+        }
+        if (oft[index] == null){
+            return false;
+        }
+
+        int oldblkIdx = oft[index].pos / IO_System.B;
+        int newblkIdx = pos / IO_System.B;
+
+        // get the file descriptor
+        int[] desc = readDesc(oft[index].index);
+        if (pos > desc[0])  // seek pos > file length
+            return false;
+
+        oft[index].pos = pos;
+        return true;
+    }
+
     // the shell program
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
