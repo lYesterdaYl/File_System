@@ -199,6 +199,43 @@ public class File_System{
         return true;
     }
 
+    // read data from the file
+    public boolean read(int index, byte[] data, int count){
+        if (index < 0 || index > oft.length){
+            return false;
+        }
+        if (oft[index] == null){
+            return false;
+        }
+
+        // get the file descriptor
+        int[] desc = readDesc(oft[index].index);
+        if (oft[index].pos + count > desc[0])
+            return false;
+
+        int startPos = oft[index].pos % IO_System.B;
+        int readed = 0;
+        while (count > 0){
+            // calculate real count
+            int rcnt = count;
+            if (startPos + rcnt > IO_System.B){
+                rcnt = IO_System.B - startPos;
+            }
+
+            // read bytes
+            for (int i = 0; i < rcnt; i++){
+                data[readed+i] = oft[index].buffer[startPos + i];
+            }
+
+            readed += rcnt;
+            oft[index].pos += rcnt;
+            count -= rcnt;
+            
+        }
+
+        return true;
+    }
+
     // the shell program
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
