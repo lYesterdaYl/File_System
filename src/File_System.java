@@ -210,8 +210,9 @@ public class File_System{
 
         // get the file descriptor
         int[] desc = readDesc(oft[index].index);
-        if (oft[index].pos + count > desc[0])
+        if (oft[index].pos + count > desc[0]){
             return false;
+        }
 
         int startPos = oft[index].pos % IO_System.B;
         int readed = 0;
@@ -230,7 +231,6 @@ public class File_System{
             readed += rcnt;
             oft[index].pos += rcnt;
             count -= rcnt;
-            
         }
 
         return true;
