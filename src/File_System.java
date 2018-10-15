@@ -253,6 +253,67 @@ public class File_System{
         return true;
     }
 
+    // write data to the file
+    public boolean write(int index, byte[] data, int count){
+        if (index < 0 || index > oft.length){
+            return false;
+        }
+        if (oft[index] == null){
+            return false;
+        }
+
+        // maximum to 3 blocks
+        if (oft[index].pos + count > IO_System.B * 3){
+            return false;
+        }
+
+        // get the file descriptor
+        int[] desc = readDesc(oft[index].index);
+        if (oft[index].pos + count > desc[0]){
+            // increase file size and block
+            int nflen = oft[index].pos + count;
+            int oldNumBlks = desc[0] / IO_System.B + (desc[0] % IO_System.B > 0 ? 1 : 0);
+            int newNumBlks = nflen / IO_System.B + (nflen % IO_System.B > 0 ? 1 : 0);
+
+            // allocate new blocks
+            if (newNumBlks > oldNumBlks){
+                int blks = newNumBlks - oldNumBlks;
+                int[] blkIdx = new int[blks];
+
+                // find empty block
+                byte[] tmp = new byte[IO_System.B];
+                io.readBlock(0, tmp);
+                int found = 0;
+
+                for (int i = DATA_BLK_START; i < IO_System.L && found < blks; i++){
+                    if (!IO_System.getBit(tmp, i)){
+                        blkIdx[found] = i;
+                        found++;
+                    }
+                }
+                // not enough blocks
+                if (found != blks){
+                    return false;
+                }
+
+                // allocate new blk
+                for (int i = 0; i < blkIdx.length; i++){
+                    IO_System.setBit(tmp, true, blkIdx[i]);
+                    desc[oldNumBlks+i+1] = blkIdx[i];
+                }
+
+                // update bitmap
+                io.writeBlock(0, tmp);
+
+            }
+            desc[0] = oft[index].pos + count;
+            writeDesc(oft[index].index, desc);
+        }
+
+        return true;
+    }
+
+
     // the shell program
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
