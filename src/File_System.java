@@ -315,10 +315,59 @@ public class File_System{
 
 
     // the shell program
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         Scanner sc = new Scanner(System.in);
         PrintStream out = System.out;
         File_System sys = new File_System();
+
+        //use arg[0] as input file name if available.
+        if (args.length > 0){
+            sc = new Scanner(new File(args[0]));
+        }
+
+        while (sc.hasNextLine()){
+            String line = sc.nextLine().trim();
+
+            try
+            {
+                if (!line.isEmpty()){
+                    Scanner scw = new Scanner(line);
+
+                    String cmd = scw.next();
+
+                    if (cmd.equals("in")){
+                        // in <disk_cont.txt> load the file
+                        String fname = "";
+                        if (scw.hasNext()){
+                            fname = scw.nextLine().trim();
+                        }
+
+                        if (sys.loadDisk(fname)){
+                            out.println("disk restored");
+                        }
+                        else{
+                            out.println("disk initialized");
+                        }
+                    }
+
+                    else if (cmd.equals("sv")){
+                        // sv <disk_cont.txt> save the file
+                        String fname = scw.nextLine().trim();
+
+                        if (sys.saveDisk(fname)){
+                            out.println("disk saved");
+                        }
+                    }
+
+
+                }
+                else{
+                    out.println();
+                }
+            } catch (Exception e){
+                out.println("error");
+            }
+        }
 
 
     }
