@@ -359,6 +359,19 @@ public class File_System{
                         }
                     }
 
+                    else if (cmd.equals("sk")){
+                        // sk <index> <pos>  seek to position
+                        int idx = scw.nextInt();
+                        int pos = scw.nextInt();
+
+                        if (sys.lseek(idx, pos)){
+                            out.println("position is " + pos);
+                        }
+                        else{
+                            out.println("error");
+                        }
+                    }
+
 
                 }
                 else{
