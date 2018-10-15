@@ -310,6 +310,42 @@ public class File_System{
             writeDesc(oft[index].index, desc);
         }
 
+        int startPos = oft[index].pos % IO_System.B;
+        int written = 0;
+        while (count > 0){
+            // calculate real count
+            int rcnt = count;
+            if (startPos + rcnt > IO_System.B){
+                rcnt = IO_System.B - startPos;
+            }
+
+            // write to buffer
+            for (int i = 0; i < rcnt; i++){
+                oft[index].buffer[startPos + i] = data[written+i];
+            }
+
+            written += rcnt;
+            oft[index].pos += rcnt;
+            count -= rcnt;
+
+            if (startPos + rcnt == IO_System.B){
+                // write old data
+                int oldblkIdx = (oft[index].pos-1) / IO_System.B;
+                if (oldblkIdx < desc.length-1 && desc[oldblkIdx+1] > 0){
+                    int blk = desc[oldblkIdx+1]; // -1=unused, 0=freenode, >0=used
+                    io.writeBlock(blk, oft[index].buffer);  // write back
+                }
+
+                // read new data to buffer
+                int newblkIdx = oldblkIdx+1;
+                if (newblkIdx < desc.length-1 && desc[newblkIdx+1] > 0){
+                    int blk = desc[newblkIdx+1];
+                    io.readBlock(blk, oft[index].buffer);
+                }
+                startPos = 0;
+            }
+        }
+
         return true;
     }
 
