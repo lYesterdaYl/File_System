@@ -128,6 +128,52 @@ public class File_System{
         }
     }
 
+    // open the named file, return the index , -1=fail
+    public int open(String fname){
+        fname = fname.trim();
+        if (fname.length() > FILE_NAME_LEN || fname.isEmpty()){
+            return -1;
+        }
+
+        if (!lseek(0, 0)){
+            return -1;
+        }
+        byte[] entry = new byte[8];
+
+        while (read(0, entry, 8)){
+            String oldfname = IO_System.unpackStr(entry, 0).trim();
+            int descIdx = IO_System.unpack(entry, 4);
+
+            if (oldfname.equals(fname)){
+                // find the file
+                // check if opened
+                int emptyIdx = -1;
+                for (int i = 0; i < oft.length; i++)
+                {
+                    if (oft[i] != null && oft[i].index == descIdx)
+                        return i;
+                    if (oft[i] == null && emptyIdx < 0)
+                        emptyIdx = i;
+                }
+                // no empty oft entry
+                if (emptyIdx < 0)
+                    return -1;
+
+                // open directory as first file
+                oft[emptyIdx] = new OFTEntry();
+                oft[emptyIdx].index = descIdx;
+
+                // read first file
+                int[] desc = readDesc(descIdx);
+                if (desc[0] > 0){
+                    io.readBlock(desc[1], oft[emptyIdx].buffer);
+                }
+                return emptyIdx;
+            }
+        }
+
+        return -1;
+    }
 
 
     // close the file
