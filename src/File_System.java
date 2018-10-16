@@ -431,7 +431,6 @@ public class File_System{
                             out.println("disk initialized");
                         }
                     }
-
                     else if (cmd.equals("sv")){
                         // sv <disk_cont.txt> save the file
                         String fname = scw.nextLine().trim();
@@ -440,7 +439,16 @@ public class File_System{
                             out.println("disk saved");
                         }
                     }
-
+                    else if (cmd.equals("op")){
+                        String fname = scw.nextLine().trim();
+                        int idx = sys.open(fname);
+                        if (idx >= 0){
+                            out.println(fname + " opened " + idx);
+                        }
+                        else{
+                            out.println("error");
+                        }
+                    }
                     else if (cmd.equals("sk")){
                         // sk <index> <pos>  seek to position
                         int idx = scw.nextInt();
