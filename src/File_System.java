@@ -440,6 +440,7 @@ public class File_System{
                         }
                     }
                     else if (cmd.equals("op")){
+                        // op <name> open the file
                         String fname = scw.nextLine().trim();
                         int idx = sys.open(fname);
                         if (idx >= 0){
