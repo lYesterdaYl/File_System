@@ -460,6 +460,23 @@ public class File_System{
                             out.println(idx + " closed");
                         }
                     }
+                    else if (cmd.equals("rd")){
+                        int idx = scw.nextInt();
+                        int cnt = scw.nextInt();
+
+                        if (cnt < 0){
+                            out.println("error");
+                        }
+                        else{
+                            byte[] data = new byte[cnt];
+                            if (sys.read(idx, data, cnt)){
+                                out.println(new String(data));
+                            }
+                            else{
+                                out.println("error");
+                            }
+                        }
+                    }
                     else if (cmd.equals("sk")){
                         // sk <index> <pos>  seek to position
                         int idx = scw.nextInt();
