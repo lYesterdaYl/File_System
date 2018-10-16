@@ -450,6 +450,16 @@ public class File_System{
                             out.println("error");
                         }
                     }
+                    else if (cmd.equals("cl")){
+                        // cl <index>  close the file
+                        int idx = scw.nextInt();
+                        if (idx <= 0 || !sys.close(idx)){
+                            out.println("error");
+                        }
+                        else{
+                            out.println(idx + " closed");
+                        }
+                    }
                     else if (cmd.equals("sk")){
                         // sk <index> <pos>  seek to position
                         int idx = scw.nextInt();
