@@ -461,6 +461,7 @@ public class File_System{
                         }
                     }
                     else if (cmd.equals("rd")){
+                        // rd <index> <count> read the data
                         int idx = scw.nextInt();
                         int cnt = scw.nextInt();
 
