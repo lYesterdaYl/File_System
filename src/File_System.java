@@ -395,6 +395,28 @@ public class File_System{
         return true;
     }
 
+    // list the directory
+    public String directory(){
+        if (!lseek(0, 0)){
+            return null;
+        }
+        byte[] entry = new byte[8];
+        String list = "";
+
+        while (read(0, entry, 8)){
+            String fname = IO_System.unpackStr(entry, 0).trim();
+
+            if (!fname.isEmpty()){
+                if (!list.isEmpty()){
+                    list += " ";
+                }
+                list += fname;
+            }
+        }
+
+        return list;
+    }
+
 
     // the shell program
     public static void main(String[] args) throws IOException{
