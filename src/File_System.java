@@ -512,6 +512,16 @@ public class File_System{
                             out.println("error");
                         }
                     }
+                    else if (cmd.equals("dr")){
+                        // directory
+                        String result = sys.directory();
+                        if (result == null){
+                            out.println("error");
+                        }
+                        else{
+                            out.println(result);
+                        }
+                    }
 
 
                 }
