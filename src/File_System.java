@@ -522,6 +522,27 @@ public class File_System{
                             out.println(result);
                         }
                     }
+                    else if (cmd.equals("wr")){
+                        int idx = scw.nextInt();
+                        char ch = scw.next().charAt(0);
+                        int cnt = scw.nextInt();
+
+                        if (cnt < 0 || idx <= 0){
+                            out.println("error");
+                        }
+                        else{
+                            byte[] data = new byte[cnt];
+                            for (int i = 0; i < cnt; i++){
+                                data[i] = (byte)ch;
+                            }
+                            if (sys.write(idx, data, cnt)){
+                                out.println(cnt + " bytes written");
+                            }
+                            else{
+                                out.println("error");
+                            }
+                        }
+                    }
 
 
                 }
