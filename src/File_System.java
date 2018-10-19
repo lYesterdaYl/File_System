@@ -523,6 +523,7 @@ public class File_System{
                         }
                     }
                     else if (cmd.equals("wr")){
+                        // wr <index> <char> <count>  write the data
                         int idx = scw.nextInt();
                         char ch = scw.next().charAt(0);
                         int cnt = scw.nextInt();
