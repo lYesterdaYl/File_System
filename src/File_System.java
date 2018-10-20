@@ -417,6 +417,70 @@ public class File_System{
         return list;
     }
 
+    // create the file
+    public boolean create(String fname){
+        fname = fname.trim();
+        if (fname.length() > FILE_NAME_LEN || fname.isEmpty()){
+            return false;
+        }
+        // search for a free descriptor
+        int freeDesc = -1;
+        byte[] buf = new byte[IO_System.B];
+        for (int i = 1; i < DATA_BLK_START && freeDesc < 0; i++){
+            io.readBlock(i, buf);
+            for (int p = 0; p < NUM_DESC_PER_BLK && freeDesc < 0; p++){
+                int[] desc = IO_System.unpackArr(buf, p*DESC_SIZE, 4);
+                // blkno=0 mean the descriptor is empty
+                if (desc[1] == 0 && desc[2] == 0 && desc[3] == 0){
+                    freeDesc = (i-1) * NUM_DESC_PER_BLK + p;
+                }
+            }
+        }
+        // no empty descriptor
+        if (freeDesc < 0){
+            return false;
+        }
+
+        // search directory entry
+        if (!lseek(0, 0)){
+            return false;
+        }
+        byte[] entry = new byte[8];
+
+        int emptyPos = -1;
+        while (read(0, entry, 8)){
+            String oldfname = IO_System.unpackStr(entry, 0).trim();
+
+            if (oldfname.equals(fname)){
+                return false;
+            }
+
+            if (fname.isEmpty()){
+                emptyPos = oft[0].pos - 8;
+                break;
+            }
+        }
+
+        // write entry
+        IO_System.packStr(entry, fname, 0);
+        IO_System.pack(entry, freeDesc, 4);
+
+        if (emptyPos >= 0){
+            if (!lseek(0, emptyPos)){
+                return false;
+            }
+        }
+        if (!write(0, entry, 8)){
+            return false;
+        }
+
+        // update the descriptor
+        int[] desc = new int[] {0, -1, -1, -1};
+        writeDesc(freeDesc, desc);
+
+        return true;
+    }
+
 
     // the shell program
     public static void main(String[] args) throws IOException{
