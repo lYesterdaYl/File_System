@@ -481,6 +481,31 @@ public class File_System{
         return true;
     }
 
+    // destroy the named file.
+    public boolean destroy(String fname){
+        fname = fname.trim();
+        if (fname.length() > FILE_NAME_LEN || fname.isEmpty()){
+            return false;
+        }
+
+        if (!lseek(0, 0)){
+            return false;
+        }
+        byte[] entry = new byte[8];
+
+        while (read(0, entry, 8)){
+            String oldfname = IO_System.unpackStr(entry, 0).trim();
+            int descIdx = IO_System.unpack(entry, 4);
+
+            //if there exist file for destroy
+            if (oldfname.equals(fname)){
+
+            }
+        }
+
+            return false;
+    }
+
 
     // the shell program
     public static void main(String[] args) throws IOException{
