@@ -643,6 +643,16 @@ public class File_System{
                             out.println("error");
                         }
                     }
+                    else if (cmd.equals("de")){
+                        // de <name> destroy the file
+                        String fname = scw.nextLine().trim();
+                        if (sys.destroy(fname)){
+                            out.println(fname + " destroyed");
+                        }
+                        else{
+                            out.println("error");
+                        }
+                    }
 
 
                 }
