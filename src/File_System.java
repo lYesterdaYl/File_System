@@ -608,6 +608,16 @@ public class File_System{
                             }
                         }
                     }
+                    else if (cmd.equals("cr")){
+                        // cr <name> create the file
+                        String fname = scw.nextLine().trim();
+                        if (sys.create(fname)){
+                            out.println(fname + " created");
+                        }
+                        else{
+                            out.println("error");
+                        }
+                    }
 
 
                 }
