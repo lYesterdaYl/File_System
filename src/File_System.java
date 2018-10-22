@@ -654,6 +654,9 @@ public class File_System{
                         }
                     }
 
+                    else{
+                        out.println("error");
+                    }
 
                 }
                 else{
