@@ -246,19 +246,22 @@ public class File_System{
     }
 
     // read data from the file, return number of bytes read, -1=failed
-    public int read(int index, byte[] data, int count)
-    {
-        if (index < 0 || index > oft.length)
+    public int read(int index, byte[] data, int count){
+        if (index < 0 || index > oft.length){
             return -1;
-        if (oft[index] == null)
+        }
+        if (oft[index] == null){
             return -1;
+        }
 
         // get the file descriptor
         int[] desc = readDesc(oft[index].index);
-        if (oft[index].pos + count > desc[0])
+        if (oft[index].pos + count > desc[0]){
             count = desc[0] - oft[index].pos;//return false;
-        if (count < 0)
+        }
+        if (count < 0){
             return -1;
+        }
 
         int startPos = oft[index].pos % IO_System.B;
         int readed = 0;
