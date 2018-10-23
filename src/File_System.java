@@ -140,7 +140,7 @@ public class File_System{
         }
         byte[] entry = new byte[8];
 
-        while (read(0, entry, 8)){
+        while (read(0, entry, 8) == 8){
             String oldfname = IO_System.unpackStr(entry, 0).trim();
             int descIdx = IO_System.unpack(entry, 4);
 
@@ -245,20 +245,20 @@ public class File_System{
         return true;
     }
 
-    // read data from the file
-    public boolean read(int index, byte[] data, int count){
-        if (index < 0 || index > oft.length){
-            return false;
-        }
-        if (oft[index] == null){
-            return false;
-        }
+    // read data from the file, return number of bytes read, -1=failed
+    public int read(int index, byte[] data, int count)
+    {
+        if (index < 0 || index > oft.length)
+            return -1;
+        if (oft[index] == null)
+            return -1;
 
         // get the file descriptor
         int[] desc = readDesc(oft[index].index);
-        if (oft[index].pos + count > desc[0]){
-            return false;
-        }
+        if (oft[index].pos + count > desc[0])
+            count = desc[0] - oft[index].pos;//return false;
+        if (count < 0)
+            return -1;
 
         int startPos = oft[index].pos % IO_System.B;
         int readed = 0;
@@ -296,7 +296,7 @@ public class File_System{
             }
         }
 
-        return true;
+        return readed;
     }
 
     // write data to the file
@@ -403,7 +403,7 @@ public class File_System{
         byte[] entry = new byte[8];
         String list = "";
 
-        while (read(0, entry, 8)){
+        while (read(0, entry, 8) == 8){
             String fname = IO_System.unpackStr(entry, 0).trim();
 
             if (!fname.isEmpty()){
@@ -448,7 +448,7 @@ public class File_System{
         byte[] entry = new byte[8];
 
         int emptyPos = -1;
-        while (read(0, entry, 8)){
+        while (read(0, entry, 8) == 8){
             String oldfname = IO_System.unpackStr(entry, 0).trim();
 
             if (oldfname.equals(fname)){
@@ -493,13 +493,50 @@ public class File_System{
         }
         byte[] entry = new byte[8];
 
-        while (read(0, entry, 8)){
+        while (read(0, entry, 8) == 8){
             String oldfname = IO_System.unpackStr(entry, 0).trim();
             int descIdx = IO_System.unpack(entry, 4);
 
             //if there exist file for destroy
             if (oldfname.equals(fname)){
+                // find the file, over write
+                lseek(0, oft[0].pos - 8);
+                for (int i = 0; i < 8; i++){
+                    entry[i] = 0;
+                }
+                write(0, entry, 8);
 
+                // check if opened
+
+                int openedIdx = -1;
+                for (int i = 0; i < oft.length; i++){
+                    if (oft[i] != null && oft[i].index == descIdx)
+                        openedIdx = i;
+                }
+                // close opened file
+                if (openedIdx >= 0){
+                    oft[openedIdx] = null;
+                }
+
+                // read descriptor
+                int[] desc = readDesc(descIdx);
+
+                // clear bitmap
+                byte[] tmp = new byte[IO_System.B];
+                io.readBlock(0, tmp);
+                for (int i = 1; i < desc.length; i++){
+                    // valid blk
+                    if (desc[i] > 0){
+                        IO_System.setBit(tmp, false, desc[i]);
+                    }
+                    desc[i] = 0;
+                }
+
+                io.writeBlock(0, tmp);
+                desc[0] = 0;
+                writeDesc(descIdx, desc);
+
+                return true;
             }
         }
 
@@ -581,7 +618,7 @@ public class File_System{
                         }
                         else{
                             byte[] data = new byte[cnt];
-                            if (sys.read(idx, data, cnt)){
+                            if (sys.read(idx, data, cnt) >= 0){
                                 out.println(new String(data));
                             }
                             else{
@@ -654,7 +691,8 @@ public class File_System{
                         }
                     }
 
-                    else{
+                    else
+                    {
                         out.println("error");
                     }
 
