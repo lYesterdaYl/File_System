@@ -552,6 +552,8 @@ public class File_System{
         Scanner sc = new Scanner(System.in);
         PrintStream out = System.out;
         File_System sys = new File_System();
+        FileOutputStream out_file = new FileOutputStream("output.txt");
+        PrintStream print_output = new PrintStream(out_file);
 
         //use arg[0] as input file name if available.
         if (args.length > 0){
@@ -576,10 +578,13 @@ public class File_System{
                         }
 
                         if (sys.loadDisk(fname)){
+
                             out.println("disk restored");
+                            print_output.println("disk restored");
                         }
                         else{
                             out.println("disk initialized");
+                            print_output.println("disk initialized");
                         }
                     }
                     else if (cmd.equals("sv")){
@@ -588,6 +593,7 @@ public class File_System{
 
                         if (sys.saveDisk(fname)){
                             out.println("disk saved");
+                            print_output.println("disk saved");
                         }
                     }
                     else if (cmd.equals("op")){
@@ -596,9 +602,11 @@ public class File_System{
                         int idx = sys.open(fname);
                         if (idx >= 0){
                             out.println(fname + " opened " + idx);
+                            print_output.println(fname + " opened " + idx);
                         }
                         else{
                             out.println("error");
+                            print_output.println("error");
                         }
                     }
                     else if (cmd.equals("cl")){
@@ -606,9 +614,11 @@ public class File_System{
                         int idx = scw.nextInt();
                         if (idx <= 0 || !sys.close(idx)){
                             out.println("error");
+                            print_output.println("error");
                         }
                         else{
                             out.println(idx + " closed");
+                            print_output.println(idx + " closed");
                         }
                     }
                     else if (cmd.equals("rd")){
@@ -618,14 +628,17 @@ public class File_System{
 
                         if (cnt < 0){
                             out.println("error");
+                            print_output.println("error");
                         }
                         else{
                             byte[] data = new byte[cnt];
                             if (sys.read(idx, data, cnt) >= 0){
                                 out.println(new String(data));
+                                print_output.println(new String(data));
                             }
                             else{
                                 out.println("error");
+                                print_output.println("error");
                             }
                         }
                     }
@@ -636,9 +649,11 @@ public class File_System{
 
                         if (sys.lseek(idx, pos)){
                             out.println("position is " + pos);
+                            print_output.println("position is " + pos);
                         }
                         else{
                             out.println("error");
+                            print_output.println("error");
                         }
                     }
                     else if (cmd.equals("dr")){
@@ -646,9 +661,11 @@ public class File_System{
                         String result = sys.directory();
                         if (result == null){
                             out.println("error");
+                            print_output.println("error");
                         }
                         else{
                             out.println(result);
+                            print_output.println(result);
                         }
                     }
                     else if (cmd.equals("wr")){
@@ -659,6 +676,7 @@ public class File_System{
 
                         if (cnt < 0 || idx <= 0){
                             out.println("error");
+                            print_output.println("error");
                         }
                         else{
                             byte[] data = new byte[cnt];
@@ -667,9 +685,11 @@ public class File_System{
                             }
                             if (sys.write(idx, data, cnt)){
                                 out.println(cnt + " bytes written");
+                                print_output.println(cnt + " bytes written");
                             }
                             else{
                                 out.println("error");
+                                print_output.println("error");
                             }
                         }
                     }
@@ -678,9 +698,11 @@ public class File_System{
                         String fname = scw.nextLine().trim();
                         if (sys.create(fname)){
                             out.println(fname + " created");
+                            print_output.println(fname + " created");
                         }
                         else{
                             out.println("error");
+                            print_output.println("error");
                         }
                     }
                     else if (cmd.equals("de")){
@@ -688,23 +710,28 @@ public class File_System{
                         String fname = scw.nextLine().trim();
                         if (sys.destroy(fname)){
                             out.println(fname + " destroyed");
+                            print_output.println(fname + " destroyed");
                         }
                         else{
                             out.println("error");
+                            print_output.println("error");
                         }
                     }
 
                     else
                     {
                         out.println("error");
+                        print_output.println("error");
                     }
 
                 }
                 else{
                     out.println();
+                    print_output.println();
                 }
             } catch (Exception e){
                 out.println("error");
+                print_output.println("error");
             }
         }
 
