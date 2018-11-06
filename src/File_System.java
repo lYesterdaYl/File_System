@@ -318,10 +318,9 @@ public class File_System{
         // maximum to 3 blocks
         if (oft[index].pos + count > IO_System.B * 3){
             count = IO_System.B * 3 - oft[index].pos;
-//            return false;
-        }
-        if (count < 0){
-            return -1;
+            if (count <= 0){
+                return count;
+            }
         }
 
         // get the file descriptor
@@ -467,7 +466,7 @@ public class File_System{
                 return false;
             }
 
-            if (fname.isEmpty()){
+            if (oldfname.isEmpty()){
                 emptyPos = oft[0].pos - 8;
                 break;
             }
@@ -481,7 +480,7 @@ public class File_System{
                 return false;
             }
         }
-        if (write(0, entry, 8) == -1){
+        if (write(0, entry, 8) != 8){
             return false;
         }
 
@@ -646,8 +645,13 @@ public class File_System{
                         else{
                             byte[] data = new byte[cnt];
                             if (sys.read(idx, data, cnt) >= 0){
-                                out.println(new String(data));
-                                print_output.println(new String(data));
+                                String tmp = new String(data);
+                                String str = "";
+                                for (int i = 0; i < tmp.length(); i++)
+                                    if (tmp.charAt(i) != 0)
+                                        str += tmp.charAt(i);
+                                out.println(str);
+                                print_output.println(str);
                             }
                             else{
                                 out.println("error");

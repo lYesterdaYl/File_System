@@ -12,3 +12,5 @@ output.txt
 40519398.txt
 input.txt
 test-sample-sv.txt
+*.MF
+*.xml

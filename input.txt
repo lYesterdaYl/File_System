@@ -1,4 +1,12 @@
 in
+cr bar
+cr pa
+cr hs
+cr poo
+cr la
+cr ga
+cr ta
+cr cha
 cr a
 cr b
 cr c
@@ -7,24 +15,158 @@ cr e
 cr f
 cr g
 cr h
-cr i
-cr j
-cr k
-cr l
-cr m
-cr n
-cr o
-cr p
-cr q
+cr run
+cr bll
+dr
+op run
+wr 1 x 60
+wr 1 y 10
+wr 1 x 10
+sk 1 0
+rd 1 65
+
+cl 1
+op bll
+wr 1 p 10
+wr 1 q 10
+wr 1 r 10
+wr 1 s 10
+sk 1 0
+rd 1 45
+cl 1
+op bll
+rd 1 45
+cl 1
+
+op run
+rd 1 65
+sk 1 0
+rd 1 105
+cl 1
+op run
+sk 1 70
+wr 1 g 10
+sk 1 0
+rd 1 85
+op d
+
+cr zzz
+cr zx
+op zx
+cr zg
+sk 3 1
+wr 3 @ 15
+wr 3 o 17
+sk 3 10
+rd 3 15
+rd 3 5
+de zx
+
 cr r
-cr s
-cr t
-cr u
-cr v
-de n
-cr w
-cr x
-de x
-cr y
-cr z
+cr hj
+cr gg
+cr vb
+
+sk 2 5
+wr 2 5 10
+wr 2 % 15
+sk 2 5
+rd 2 10
+cl 2
+cl 1
+
+op d
+rd 1 30
+cl 1
+op d
+op r
+wr 2 k 14
+sk 2 0
+wr 2 V 15
+sk 2 0
+rd 2 20
+wr 2 T 100
+sk 2 5
+rd 2 100
+sk 2 115
+wr 2 ^ 200
+sk 2 0
+rd 2 193
+cl 2
+op r
+rd 2 193
+cl 2
+
+op bar
+wr 2 ! 64
+
+sk 1 25
+wr 1 f 120
+sk 1 0
+rd 1 200
+cl 1
+dr
+sv test-sample-sv.txt
+
+in
+cr 1s2
+dr
+op 1s2
+op 334
+cr 123
+cr 123
+cr 890
+cr 45
+cr %sd
+dr
+op 34
+op %sd
+op 123
+de 123
+cl 1
+cl 3
+cl 2
+de 34
+dr
+op 1s2
+op 45
+op %sd
+op 890
+cl 2
+op 890
+rd 2 10
+wr 2 F 12
+cl 2
+op 890
+rd 2 13
+dr
+
+in test-sample-sv.txt
+dr
+op bll
+rd 1 45
+sk 1 0
+op run
+rd 2 200
+sk 2 100
+wr 2 ? 23
+sk 2 63
+rd 2 100
+sk 2 64
+rd 2 150
+op r
+rd 3 193
+wr 3 j 2
+sk 3 0
+wr 3 a 5
+sk 3 0
+rd 3 192
+de bll
+cl 3
+cl 3
+op bar
+rd 1 64
+cl 1
+cr xxx
+op xxx
 dr
