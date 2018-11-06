@@ -141,6 +141,7 @@ public class File_System{
         byte[] entry = new byte[8];
 
         while (read(0, entry, 8) == 8){
+
             String oldfname = IO_System.unpackStr(entry, 0).trim();
             int descIdx = IO_System.unpack(entry, 4);
 
@@ -150,14 +151,16 @@ public class File_System{
                 int emptyIdx = -1;
                 for (int i = 0; i < oft.length; i++)
                 {
-                    if (oft[i] != null && oft[i].index == descIdx)
+                    if (oft[i] != null && oft[i].index == descIdx){
                         return i;
+                    }
                     if (oft[i] == null && emptyIdx < 0)
                         emptyIdx = i;
                 }
                 // no empty oft entry
-                if (emptyIdx < 0)
+                if (emptyIdx < 0){
                     return -1;
+                }
 
                 // open directory as first file
                 oft[emptyIdx] = new OFTEntry();
@@ -168,6 +171,7 @@ public class File_System{
                 if (desc[0] > 0){
                     io.readBlock(desc[1], oft[emptyIdx].buffer);
                 }
+
                 return emptyIdx;
             }
         }
@@ -303,17 +307,21 @@ public class File_System{
     }
 
     // write data to the file
-    public boolean write(int index, byte[] data, int count){
+    public int write(int index, byte[] data, int count){
         if (index < 0 || index > oft.length){
-            return false;
+            return -1;
         }
         if (oft[index] == null){
-            return false;
+            return -1;
         }
 
         // maximum to 3 blocks
         if (oft[index].pos + count > IO_System.B * 3){
-            return false;
+            count = IO_System.B * 3 - oft[index].pos;
+//            return false;
+        }
+        if (count < 0){
+            return -1;
         }
 
         // get the file descriptor
@@ -342,7 +350,7 @@ public class File_System{
                 }
                 // not enough blocks
                 if (found != blks){
-                    return false;
+                    return -1;
                 }
 
                 // allocate new blk
@@ -395,7 +403,7 @@ public class File_System{
             }
         }
 
-        return true;
+        return written;
     }
 
     // list the directory
@@ -439,6 +447,7 @@ public class File_System{
                 }
             }
         }
+
         // no empty descriptor
         if (freeDesc < 0){
             return false;
@@ -467,18 +476,18 @@ public class File_System{
         // write entry
         IO_System.packStr(entry, fname, 0);
         IO_System.pack(entry, freeDesc, 4);
-
         if (emptyPos >= 0){
             if (!lseek(0, emptyPos)){
                 return false;
             }
         }
-        if (!write(0, entry, 8)){
+        if (write(0, entry, 8) == -1){
             return false;
         }
 
         // update the descriptor
         int[] desc = new int[] {0, -1, -1, -1};
+
         writeDesc(freeDesc, desc);
 
         return true;
@@ -558,6 +567,10 @@ public class File_System{
         //use arg[0] as input file name if available.
         if (args.length > 0){
             sc = new Scanner(new File(args[0]));
+        }
+        if (args.length == 2){
+            out_file = new FileOutputStream(args[1]);
+            print_output = new PrintStream(out_file);
         }
 
         while (sc.hasNextLine()){
@@ -683,9 +696,11 @@ public class File_System{
                             for (int i = 0; i < cnt; i++){
                                 data[i] = (byte)ch;
                             }
-                            if (sys.write(idx, data, cnt)){
-                                out.println(cnt + " bytes written");
-                                print_output.println(cnt + " bytes written");
+
+                            int written = sys.write(idx, data, cnt);
+                            if (written >= 0){
+                                out.println(written + " bytes written");
+                                print_output.println(written + " bytes written");
                             }
                             else{
                                 out.println("error");

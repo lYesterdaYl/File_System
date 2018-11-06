@@ -1,36 +1,30 @@
 in
-cr lu
-cr ab
-cr cd
-cr df
-cr hah
-cr ha
-cr hag
-cr ags
-cr run
-cr bll
+cr a
+cr b
+cr c
+cr d
+cr e
+cr f
+cr g
+cr h
+cr i
+cr j
+cr k
+cr l
+cr m
+cr n
+cr o
+cr p
+cr q
+cr r
+cr s
+cr t
+cr u
+cr v
+de n
+cr w
+cr x
+de x
+cr y
+cr z
 dr
-op run
-wr 1 x 60
-wr 1 y 10
-op lu
-wr 1 x 10
-sk 1 0
-rd 1 65
-cl 1
-cl 2
-de ab
-de cd
-de df
-de hah
-de ha
-de lu
-in
-cr abc
-op abc
-wr 1 x 2
-wr 1 y 3
-sk 1 0
-rd 1 4
-rd 1 4
-rd 1 4
